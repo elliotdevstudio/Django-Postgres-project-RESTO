@@ -15,6 +15,8 @@ from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOn
 
 work_preferences = [('server','Server'), ('runner/busser','Runner/Busser'),('barista','Barista'),('bartender','Bartender'),('cashier','Cashier'),('line-cook','Line-cook'),('sous-chef','Sous chef'),('baker','Baker'),('pastry chef','Pastry Chef'), ('kitchen manager','Kitchen Manager'),('head chef','Head Chef'),('prep cook','Prep Cook'),('dishwasher','Dishwasher'),('general manager','General Manager'),('other', 'Other')]
 
+business_type = [('fs-rest','Full-service Restaurant'),('cafe','Cafe'),('commissary','Commissary Kitchen'),('catering','Catering'),('prod mft','Product Manufacturing'),('coff-rst','Coffee Roaster'),('food-cult','Food Cultivation'),('food-science','Food-Science'),('fine-dine','Fine Dining'),('product supply','Product Supplier'),('wholesale','Wholesale'),('other','Other')]
+
 pay_type = [('hourly','Hourly'), ('salary','Salary'), ('other','Other') ]
 
 # === this list could be used within a model itself if the content is specific to it
@@ -23,7 +25,7 @@ states = [('AL','Alabama'),('AK','Alaska'),('AZ','Arizona'),('AR','Arkansas'),('
 
 # Create models here
 
-class Profile(Model):
+class Individual(Model):
   user = OneToOneField(User, on_delete=models.CASCADE)
   first_name = models.CharField(max_length=75)
   last_name = models.CharField(max_length=75)
@@ -43,6 +45,7 @@ class Profile(Model):
 class Business(Model):
   user = OneToOneField(User, on_delete=models.CASCADE)
   name = models.CharField(max_length=150)
+  category = models.CharField(choices=business_type, max_length=75)
   description = models.TextField(max_length=1000, default='business description pending')
   address = models.CharField(max_length=200)
   city = models.CharField(max_length=75)
@@ -75,7 +78,7 @@ class Review(Model):
   review = TextField(max_length=4000)
   created_at = DateTimeField(auto_now_add=True)
   updated_at = DateTimeField(auto_now=True)
-  user = ForeignKey(User, on_delete=models.CASCADE, related_name='review')
+  user = ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
 
   def __str__(self) -> str:
     return self.title

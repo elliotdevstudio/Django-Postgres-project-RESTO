@@ -9,7 +9,7 @@ from django.views.generic.base import ContextMixin, TemplateView
 from django.views.generic.detail import DetailView
 
 
-from main_app.models import Job_Post, Business, Review, User
+from main_app.models import Job_Post, Business, Review, Individual
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
@@ -36,9 +36,9 @@ class JobPostCreate(ModelForm):
         fields = ['title', 'pay_type', 'description', 'city', 'state']
         __empty__ = ('(Unknown)')
 
-class UserProfileForm(ModelForm):
+class IndividualProfileForm(ModelForm):
     class Meta:
-        model = User 
+        model = Individual
         fields = ['first_name', 'last_name', 'city', 'state', 'zip_code', 'work_preferences', 'description']
         __empty__ = ('(Unknown)')
 
@@ -70,13 +70,13 @@ class About(TemplateView):
 
 
 ## == USER CREATE ===
-class UserSignup(TemplateView):
-  template_name= "user_signup"
+class IndividualSignup(TemplateView):
+  template_name= "individual_signup"
 
   def get(self, request):
       user_form = UserCreationForm()
       context = {"user_form": user_form}
-      return render(request, "registration/user_signup.html", context)
+      return render(request, "individual_signup.html", context)
 
   def post(self, request):
       user_form = UserCreationForm(request.POST)
@@ -84,10 +84,10 @@ class UserSignup(TemplateView):
         user = user_form.save()
         user.save()
         login(request, user)
-        return render('user_profile_create', kwargs={'pk': self.object.pk})
+        return render('individual_create', kwargs={'pk': self.object.pk})
       else:
         context = {"user_form": user_form}
-        return render(request, "registration/user_signup.html", context)
+        return render(request, "individual_signup.html", context)
 
 
 ## == BUSINESS CREATE ===
@@ -98,7 +98,7 @@ class BusinessSignup(TemplateView):
       user_form = UserCreationForm()
       context = {"user_form": user_form}
       context["login"] = True
-      return render(request, "registration/business_signup.html", context)
+      return render(request, "business_signup.html", context)
 
     def post(self, request):
       user_form = UserCreationForm(request.POST)
@@ -106,10 +106,10 @@ class BusinessSignup(TemplateView):
         user = user_form.save()
         user.save()
         login(request, user)
-        return render("business_profile_create.html", kwargs={'pk': self.object.pk})
+        return render("business_create.html", kwargs={'pk': self.object.pk})
       else:
         context = {"user_form": user_form}
-        return render(request, "registration/business_signup.html", context)
+        return render(request, "business_signup.html", context)
 
 
 '''
@@ -120,39 +120,39 @@ PROFILE CREATION (WITH CUSTOM FORM FIELDS) FOR EACH ONE, AND SAVE THAT POST DATA
 '''
 # === USER PROFILE CREATE === 
 @method_decorator(login_required, name='dispatch')
-class UserProfileCreate(TemplateView):
-    template_name = "user_profile_create"
+class IndividualCreate(TemplateView):
+    template_name = "individual_create"
     success_url = "/profile/"
 
     def get(self, request):
-        user_profile_form = UserProfileForm()
-        context = {"user_profile_form": user_profile_form}
+        individual_profile_form = IndividualProfileForm()
+        context = {"individual_profile_form": individual_profile_form}
         context["login"] = True
-        return render(request,"registration/user_profile_create.html", context)
+        return render(request,"individual_create.html", context)
     
     def post(self, request):
-        user_profile_form = UserProfileForm(request.POST)
+        individual_profile_form = IndividualProfileForm(request.POST)
 
-        if user_profile_form.is_valid(): 
-          user = user_profile_form.save() 
+        if individual_profile_form.is_valid(): 
+          user = individual_profile_form.save() 
           user.save()
-          return render(request, 'user_detail', kwargs={'pk': self.object.pk})
+          return render(request, 'individual_detail', kwargs={'pk': self.object.pk})
         else:
-          context = {"user_profile_form": user_profile_form}
-          return render(request, "registration/user_profile_create.html", context) 
+          context = {"individual_profile_form": individual_profile_form}
+          return render(request, "individual_create.html", context) 
 
 # === BUSINESS-PROFILE-CREATE ===  
 @method_decorator(login_required, name='dispatch')
-class BusinessProfileCreate(TemplateView):
+class BusinessCreate(TemplateView):
     model = Business
-    template_name = "business_profile_create"
+    template_name = "business_create"
     success_url= "/profile/"
 
     def get(self, request):
         business_profile_form = BusinessProfileForm()
         context = {"business_profile_form": business_profile_form}
         context["login"] = True
-        return render(request,"registration/business_profile_create.html", context)
+        return render(request,"business_create.html", context)
     
     def post(self, request):
         business_profile_form = BusinessProfileForm(request.POST)
@@ -193,7 +193,7 @@ class BusinessProfileCreate(CreateView):
 @method_decorator(login_required, name='dispatch')
 class BusinessDetail(DetailView):
     model = Business
-    template_name = "business_profile_create.html"
+    template_name = "business_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -204,7 +204,7 @@ class BusinessDetail(DetailView):
 class BusinessRedirect(View):
     def get(self, request):
     
-        return redirect('business_detail', request.user.business.pk)
+        return redirect('business_detail', request.user.pk)
 
 # === JOB LISTING -CREATE- ==== #
 
@@ -235,15 +235,15 @@ class JobPostDetail(DetailView):
 class JobPostUpdate(UpdateView):
     model = Job_Post
     fields = ['title', 'pay_type', 'description']
-    template_name = "job_listing_update.html"
+    template_name = "job_post_update.html"
     
     def get_success_url(self):
-        return reverse('job_listing_detail', kwargs={'pk': self.object.pk})
+        return reverse('job_post_detail', kwargs={'pk': self.object.pk})
 
 @method_decorator(login_required, name='dispatch')
 class JobPostDelete(DeleteView):
     model = Job_Post
-    template_name = "job_listing_delete_confirmation.html"
+    template_name = "job_post_delete_confirmation.html"
    
     def get_success_url(self):
         return reverse('business_detail', kwargs={'pk': self.object.business_id})
@@ -254,9 +254,9 @@ class JobPostDelete(DeleteView):
 # === USER DETAIL VIEW ===  READ
 
 @method_decorator(login_required, name='dispatch')
-class UserDetail(DetailView):
-  model = User
-  template_name = "user_detail.html"
+class IndividualDetail(DetailView):
+  model = Individual
+  template_name = "individual_detail.html"
 
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -264,10 +264,10 @@ class UserDetail(DetailView):
   
 
 @method_decorator(login_required, name='dispatch')
-class UserRedirect(View):
+class IndividualRedirect(View):
   def get(self, request):
 
-    return redirect('user_detail', request.user.pk)
+    return redirect('individual_detail', request.user.pk)
 
 
 # === REVIEW -CREATE- ==== #

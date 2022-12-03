@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block scripts %} <script src="{% static 'scripts/app.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/home.scss' %}">{% endblock styles %}
+{% block title %}
+Home 
+{% endblock %}
+
+{% block content %}
+
+  <h2 class="page-header">Homepage</h2>
+  <div class="homepage-body-text">
+   <p>&nbsp;&nbsp;Resto is a new platform intended for both businesses and individuals in providing a platform for sharing and discovering
+    work opportunites..
+  </p>
+  </div>
+
+{% endblock %}

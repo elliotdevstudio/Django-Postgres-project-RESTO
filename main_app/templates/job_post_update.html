@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block scripts %} <script src="{% static 'scripts/homepage.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/job_listing_detail.scss' %}">{% endblock styles %}
+{% block title%}
+Job Listing
+{% endblock %}
+
+{% block content %}
+<section class="main-content">
+  <h1>Job Listing Update Page</h1> <a href="{% url 'job_listing_delete' job_post.pk %}"><h2>Job Listing Delete</h2></a>
+
+<form method="POST" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <input class="button" type="submit" value="Update"/>
+</form>
+    </section>
+</section>
+  
+{% endblock %}

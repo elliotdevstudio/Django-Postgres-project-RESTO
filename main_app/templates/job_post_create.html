@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block scripts %} <script src="{% static 'scripts/app.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/job_listing_create.scss' %}">{% endblock styles %}
+{% block title%}
+Create Job Listing 
+{% endblock %}
+
+{% block content %}
+<section class="main-content">
+  <h2>Job Listing Create Page</h2>
+  <form method="post" action="{% url 'job_listing_create' user.pk %}">
+      {% csrf_token %} {{form.as_p}}
+      <input class="button" type="submit" name="next" value="submit"/>
+    </form>
+</section>
+{% endblock %}

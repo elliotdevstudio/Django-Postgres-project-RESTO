@@ -1,0 +1,77 @@
+{% load static %}
+{% load sass_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Local Styles -->
+    <link rel="stylesheet" href="{% sass_src 'styles/main.scss' %}">
+    {% block styles %} {% endblock %}
+
+    <!-- Local Scripts -->
+    {% block scripts %}{% endblock scripts %}
+    <script src="{% static 'scripts/app.js' %}" defer></script>
+
+    
+    <link rel="shortcut icon" type="image/jpg" href="https://i.pinimg.com/originals/b6/3a/c8/b63ac81db002b5678a5df66ba62a4696.png"/>
+    <title>Resto - {% block title %}{% endblock %}</title>
+</head>
+<body>
+    <!-- Navbar can go here since it will be on all pages -->
+  <nav class="navbar">
+    
+    <h1 class="header-title">Resto</h1>
+   
+    {% if business.user.is_authenticated %}
+    
+    <div class="auth-session">
+      <span class="navbar-item"><a class="user-link" href="{% url 'business_detail' request.user.pk %}">My Account</a></span>
+      <span class="navbar-item"><a class="navbar-item logout-nav" href="{% url 'logout' %}" >Logout</a></span>
+    </div>
+    {% elif individual.user.is_authenticated %}
+    
+    <div class="auth-session">
+      <span class="navbar-item"><a class="user-link" href="{% url 'individual_profile' request.user.pk %}">My Account</a></span>
+      <span class="navbar-item"><a class="navbar-item logout-nav" href="{% url 'logout' %}" >Logout</a></span>
+    </div>
+    <main class="main-content">
+   <!--
+    <div class="dropdown">
+        replace this jazzburger with a regular navbar burger  
+      <img id="jazzburger-image" type="button" id="dropdownMenuButton"  src="https://www.happysocks.com/icons/jazzburger.svg" alt="Click for links">
+      <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item user-profile-link" href="{% url 'business_detail' user.pk %}">My Account</a>
+        <a class="dropdown-item logout-nav" href="{% url 'logout' %}" >Logout</a>
+      </div>
+    </div>-->
+    
+    {% else %} 
+    <div class="new-visitor-navbar">
+        <span class="navbar-item one" ><a href="{% url 'about' %}">About</a></span>
+        <span class="navbar-item one" ><a href="{% url 'individual_signup' %}" id="individual-signup-button" >For Individuals</a></span>
+        <span class="navbar-item one" ><a href="{% url 'business_signup' %}" id="business-signup-button" >For Businesses</a></span>
+        <span class="navbar-item" ><a id="login-button" href="{% url 'login'%}">Login</a></span>
+  
+    </div>
+    {% endif %}  
+  </nav>     
+    <!-- Content block for extending pages -->
+    {% block content %}{% endblock content %}
+  </main>  
+  <footer class="footer">
+    <div class="footer-one">
+      <a id="logo" href="/">Resto</a>
+      <i class="fas fa-copyright"></i>
+      <p>2021</p>
+    </div>
+  </footer>
+</body>
