@@ -22,6 +22,8 @@ class ProfileInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline,)
 
-admin.site.register(Business, Job_Post, Individual,Review)
-
+admin.site.register(Business) 
+admin.site.register(Job_Post)
+admin.site.register(Individual)
+admin.site.register(Review)
 
