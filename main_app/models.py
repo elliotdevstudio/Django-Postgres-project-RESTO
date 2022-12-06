@@ -23,7 +23,7 @@ states = [('AL','Alabama'),('AK','Alaska'),('AZ','Arizona'),('AR','Arkansas'),('
 
 # Create models here
 
-class Profile(Model):
+class Individual(Model):
   user = OneToOneField(User, on_delete=models.CASCADE)
   first_name = models.CharField(max_length=75)
   last_name = models.CharField(max_length=75)
