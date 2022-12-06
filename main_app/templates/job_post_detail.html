@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block scripts %} <script src="{% static 'scripts/homepage.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/job_listing_detail.scss' %}">{% endblock styles %}
+{% block title%}
+Job Listing
+{% endblock %}
+
+{% block content %}
+<section class="main-content">
+  <h1>Job Listing Detail Page</h1>
+</br>
+<h3>{{ business.user.username }}</h3>
+</br>
+<h2>{{ job_post.title }}</h2>
+</br>
+<h3>{{ job_post.business }}</h3>
+</br>
+<p>{{ job_post.city }}, {{ job.state }}</p>
+</br>
+  <p>{{ job_post.pay_type }}</p>
+</br>
+  <p>{{ job_post.description }}</p>
+
+<button> <a href={% url 'job_post_update' job_post.pk %}>Update</a></button>
+<button><a href={% url 'job_post_delete' job_post.pk %}>Delete</a></button> 
+
+</section>
+  
+{% endblock %}

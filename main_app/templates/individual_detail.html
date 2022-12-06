@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+{% block scripts %} <script src="{% static 'scripts/homepage.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/profile.scss' %}">{% endblock styles %}
+{% block title%}
+Profile Detail 
+{% endblock %}
+{% block content %}
+<section class="main-content"></section>
+  <div class="col-one">
+    <div id="profile-image-container">
+      <img id="profile-image" src="https://assets.webiconspng.com/uploads/2017/01/Black-User-Icon.png" />
+    </div>
+    <h1>{{ individual.user.username }}</h1>
+  <h3>{{ individual.user.city }}, {{ individual.user.state }}</h3>
+  <h3>Service Assets</h3>
+  <p>{{ individual.user.work_preferences }}</p>
+  </div>
+  <div class="col-two">
+    <h3>Reviews</h3>
+    <button>Create review</button>
+  </div>
+{% for reviews in individual.user.reviews.all %}
+      
+  <div class="review-card">
+    <div class="card-header">
+      <a href="{% url 'review' review.pk %}" class="text-decoration-none text-dark"><p>{{review.title}}</p></a>
+    </div> 
+    <div class="card-body">
+      <a href="{% url 'review_detail' user.city %}" class="text-decoration-none text-dark" class="">{{ review.user.location }}</h4></a>
+      <p class="card-text text-muted lead">{{review.description|truncatechars:"220" | safe}} <a href="{% url 'review_detail' review.pk %}" >See more</a></p>
+              
+    </div>
+  </div>
+      <br>
+      <br>
+      {% empty %}
+      <p>No reviews to display at this time.</p>
+      {% endfor %}
+{% endblock %}
+

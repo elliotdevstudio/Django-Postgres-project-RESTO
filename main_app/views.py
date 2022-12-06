@@ -109,10 +109,10 @@ class BusinessSignup(TemplateView):
         user = user_form.save()
         user.save()
         login(request, user)
-        return render("business_profile_create.html", kwargs={'pk': self.object.pk})
+        return render("business_create.html", kwargs={'pk': self.object.pk})
       else:
         context = {"user_form": user_form}
-        return render(request, "registration/business_signup.html", context)
+        return render(request, "business_signup.html", context)
 
 
 '''
@@ -139,14 +139,14 @@ class IndividualProfileCreate(TemplateView):
         if individual_user_form.is_valid(): 
           user = individual_user_form.save() 
           user.save()
-          return render(request, 'user_detail', kwargs={'pk': self.object.pk})
+          return render(request, 'individual_detail', kwargs={'pk': self.object.pk})
         else:
           context = {"individual_user_form": individual_user_form}
           return render(request, "registration/user_profile_create.html", context) 
 
 # === BUSINESS-PROFILE-CREATE ===  
 @method_decorator(login_required, name='dispatch')
-class BusinessProfileCreate(TemplateView):
+class BusinessCreate(TemplateView):
     model = Business
     template_name = "business_create"
     success_url= "/profile/"
@@ -207,7 +207,7 @@ class BusinessDetail(DetailView):
 class BusinessRedirect(View):
     def get(self, request):
     
-        return redirect('business_detail', request.user.business.pk)
+        return redirect('business_detail', request.user.pk)
 
 # === JOB LISTING -CREATE- ==== #
 

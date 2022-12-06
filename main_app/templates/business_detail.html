@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+
+{% block scripts %} <script src="{% static 'scripts/app.js' %}"></script> {% endblock scripts %}
+{% block styles %}<link rel="stylesheet" href="{% sass_src 'styles/business_detail.scss' %}">{% endblock styles %}
+
+{% block title%} Business Profile Detail {% endblock %}
+
+
+{% block content %}
+<section class="main-content"></section>
+  <div class="col-one">
+    <div class="profile-card">
+      <img class="profile-image" src="https://assets.webiconspng.com/uploads/2017/01/Black-User-Icon.png" />
+      <div class="business-profile-info"> 
+        <h2>{{ business.user.username }}</h2>
+        <h4>{{ business.city}}, {{ business.state }}</h4>
+      </div>
+    </div> 
+    <div class="business-description">
+      <p class="business-description">{{ business.about }}</p>
+    <div class="listing">
+    <h4>Listings</h4>
+    <a href="{% url 'job_listing_create' user.pk %}"><p>Create Listing</p></a>
+    </div>
+  </div>
+{% for job_post in user.listings.all %}
+      
+    <div class="post-card">
+    
+     <h3>{{job_post.title}}</h3>
+   
+      <h4>{{ job_post.city }}</h4>
+      <p class="card-text text-muted lead">{{job_post.description|truncatechars:"220" | safe}} <a href="{% url 'job_listing_detail' job_post.pk %}" >See more</a></p>       
+   
+    </div>
+      {% empty %}
+      <p>No job listings to display at this time.</p>
+      {% endfor %}
+  </div>
+</section>
+{% endblock %}
+
